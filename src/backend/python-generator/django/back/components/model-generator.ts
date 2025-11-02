@@ -102,7 +102,15 @@ function generateEnum(e: EnumX) : string {
 
     const lines = [
         `class ${e.name}(models.TextChoices):`,
-        `${ident}"""${e.comment ?? ''}"""`,
+        `${ident}"""Enumeração que representa ${e.name} no sistema `,
+        `${ident}Opções:`,
+        ...e.attributes.map(a => {
+            const str = split_on_camelcase(a.name).toLowerCase();
+            return `${ident}${str} : str`;
+        }),
+        `${ident}----------`,
+        `${ident}Gerado por leds-tools-spark`,
+        `${ident}"""`,
         ...e.attributes.map(a => {
             const str = split_on_camelcase(a.name).toLowerCase()
             return `${ident}${str.toUpperCase()} = '${str.toUpperCase()}', _('${a.fullName ?? capitalizeString(str.replaceAll('_', ' '))}')`
@@ -114,11 +122,36 @@ function generateEnum(e: EnumX) : string {
 }
 
 function generateModel(e: LocalEntity, set: Set<LocalEntity>) : string {
+    const split_on_camelcase = (str: string) => {
+        return str.replaceAll(/[a-z][A-Z]/g, sub => sub.at(0)+'_'+sub.at(1))
+    }
     const superType = getRef(e.superType);
     const superTypeName = superType?.name ?? 'PolymorphicModel, models.Model';
     const lines = [
         `class ${e.name}(${superTypeName}):`,
-        `${ident}'''${e.comment ?? ''}'''`,
+        `${ident}"""Cria um novo objeto ${e.name} no banco de dados.`,
+        ``,
+        `${ident}Atributos:`,
+        `${ident}----------`,
+        ...e.attributes.map(a => {
+            const str = split_on_camelcase(a.name).toLowerCase();
+            return `${ident}${str} : ${a.type ?? 'str'}`;
+        }),
+        ...e.enumentityatributes.map(a =>{
+            const str = split_on_camelcase(a.name).toLowerCase();
+            return `${ident}${str} : Enum`;
+        }),
+        ...e.relations.map(a=>{
+            const str = split_on_camelcase(a.name).toLowerCase();
+            const capitalized = a.name.charAt(0).toUpperCase() + a.name.slice(1);
+            return `${ident}${str} : ${capitalized}`;
+        }),
+        `${ident}----------`,
+        `${ident}Retorno:`,
+        `${ident}Objeto ${e.name} criado no banco de dados`,
+        `${ident}----------`,
+        `${ident}Gerado por leds-tools-spark`,
+        `${ident}"""`,
         ``,
         ...e.attributes.map(k => ident+generateAttribute(k)),
         ``,
@@ -137,7 +170,6 @@ function generateModel(e: LocalEntity, set: Set<LocalEntity>) : string {
 
     return lines.join('\n')
 }
-
 function generateEnumAttribute(e: EnumEntityAtribute) : string {
     let valor = ""
     let tamanho = 0
