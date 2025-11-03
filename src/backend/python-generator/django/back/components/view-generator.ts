@@ -24,6 +24,19 @@ function createEntityViewSet(e: LocalEntity, has_actor: boolean) : string {
 
     const lines = [
         `class ${e.name}ViewSet(ModelViewSet):`,
+        ``,
+         `${ident}"""`,
+        `${ident}ViewSet para gerenciar operações CRUD de ${e.name}.`,
+        `${ident}`,
+        `${ident}Fornece endpoints RESTful para:`,
+        `${ident}- Listar e recuperar ${e.name}s (GET)`,
+        `${ident}- Criar novos ${e.name}s (POST)`,
+        `${ident}- Atualizar ${e.name}s existentes (PUT/PATCH)`,
+        `${ident}- Excluir ${e.name}s (DELETE)`,
+        `${ident}`,
+        `${ident}Gerado automaticamente por leds-tools-spark.`,
+        `${ident}"""`,
+        ``,
         `${ident}queryset = ${e.name}.objects.all()`,
         `${ident}pagination_class = CustomPagination`,
         `${ident}authentication_classes = [OAuth2Authentication, SessionAuthentication]`,
@@ -71,7 +84,7 @@ export function generateAPIView(m: Module, entities_with_actor: Set<Entity>) : s
         `from rest_framework import filters`,
         `import django_filters.rest_framework`,
         ``,
-        ``,
+       
         ...entities.map(e => createEntityViewSet(e, entities_with_actor.has(e))),
     ]
 
