@@ -23,22 +23,22 @@ function entitySerializer(e: LocalEntity) : string {
     const lines = [
         `class ${e.name}WriteSerializer(serializers.ModelSerializer):`,
         ``,
-        `${ident}${ident}"""`,
-        `${ident}${ident}@Param model :Modelo ${e.name} para desserialização de dados de entrada.`,
-        `${ident}${ident}@return Serializer: Dados validados prontos para criação ou atualização .`,
-        `${ident}${ident}Gerado automaticamente por leds-tools-spark.`,
-        `${ident}${ident}"""`,
+        `${ident}"""`,
+        `${ident}@Param model :Modelo ${e.name} para desserialização de dados de entrada.`,
+        `${ident}@return Serializer: Dados validados prontos para criação ou atualização .`,
+        `${ident}Gerado automaticamente por leds-tools-spark.`,
+        `${ident}"""`,
         ``,
         `${ident}class Meta:`,
         `${ident}${ident}model = ${e.name}`,
         `${ident}${ident}exclude = ("polymorphic_ctype",)`,
         ``,
         `class ${e.name}ReadSerializer(serializers.ModelSerializer):`,
-        `${ident}${ident}"""`,
-        `${ident}${ident}@Param model :Modelo ${e.name} para serialização de dados de saída.`,
-        `${ident}${ident}@return Serializer: Dados serializados prontos para resposta API.`,
-        `${ident}${ident}Gerado automaticamente por leds-tools-spark.`,
-        `${ident}${ident}"""`,
+        `${ident}"""`,
+        `${ident}@Param model :Modelo ${e.name} para serialização de dados de saída.`,
+        `${ident}@return Serializer: Dados serializados prontos para resposta API.`,
+        `${ident}Gerado automaticamente por leds-tools-spark.`,
+        `${ident}"""`,
         ``,
         `${ident}class Meta:`,
         `${ident}${ident}depth = 1`,
@@ -50,4 +50,5 @@ function entitySerializer(e: LocalEntity) : string {
 
     return lines.join('\n')
 }
+
 
